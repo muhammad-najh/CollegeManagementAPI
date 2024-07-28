@@ -25,4 +25,8 @@ public class ProfessorController {
     public ProfessorEntity createProfessor(@RequestBody ProfessorEntity professor) {
         return professorService.createProfessor(professor);
     }
+    @PutMapping("/{professorId}/subjectToTech/{subjectId}")
+    public ProfessorEntity assignSubjectToProffesor(@PathVariable Long professorId, @PathVariable Long subjectId) {
+        return professorService.assignSubjectToProffesor(professorId,subjectId);
+    }
 }
