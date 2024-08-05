@@ -6,7 +6,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.util.Set;
 
 @Getter
@@ -16,7 +24,8 @@ import java.util.Set;
 @Entity
 
 @Table(name = "students")
-public class StudentEntity {
+@Audited
+public class StudentEntity extends AuditableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +33,7 @@ public class StudentEntity {
 
     @OneToOne
     @JoinColumn(name = "admission_id_mapping")
+    @NotAudited //excluding in audit table
     private AdmissionRecordEntity studentAdmission;
 
     @ManyToMany
@@ -34,6 +44,8 @@ public class StudentEntity {
             inverseJoinColumns = @JoinColumn(name = "subject_id")
 
     )
+
+    @NotAudited //excluding in audit table
     private Set<SubjectEntity> subjects;
 
 
@@ -43,6 +55,30 @@ public class StudentEntity {
             inverseJoinColumns = @JoinColumn(name = "professor_id")
     )
     @ManyToMany
+    @NotAudited //excluding in audit table
     private Set<ProfessorEntity> studentTeachByProfessors;
+
+
+    //Life cycle hocks for database
+    // you can remove behavior of auditable listiner you can remove  it and try to create your own audutable senario
+
+    //before save
+    @PrePersist
+    void beforeSave(){
+// createAt = LocalDateTime.now(); this will run by defult
+// for example you want to count++ number of student in any other place in database
+    }
+
+    @PreUpdate
+    void beforeUpdate(){
+
+    }
+
+    @PreRemove
+    void beforeRemove(){
+
+    }
+
+
 
 }

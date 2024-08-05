@@ -1,43 +1,56 @@
 package com.skysoft.krd.collegemanagementapi.controllers;
 
-import com.skysoft.krd.collegemanagementapi.entities.StudentEntity;
-import com.skysoft.krd.collegemanagementapi.services.StudentService;
+import com.skysoft.krd.collegemanagementapi.dto.StudentDto;
+import com.skysoft.krd.collegemanagementapi.exceptions.ResourceNotFoundException;
+import com.skysoft.krd.collegemanagementapi.services.impl.StudentServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("students")
+@RequiredArgsConstructor
 public class StudentController {
-   private final StudentService studentService;
-   public StudentController(StudentService studentService) {
-       this.studentService = studentService;
-   }
+   private final StudentServiceImpl studentServiceImpl;
    @GetMapping
-    public List<StudentEntity> getAllStudents() {
-       return studentService.getAllStudents();
+    public ResponseEntity<List<StudentDto>> getAllStudents() {
+       return ResponseEntity.ok(studentServiceImpl.getAllStudents());
    }
    @GetMapping("/{studentId}")
-    public StudentEntity getStudentById(@PathVariable Long studentId) {
-       return studentService.getStudentById(studentId);
+    public ResponseEntity<StudentDto> getStudentById(@PathVariable Long studentId) {
+       Optional<StudentDto> studentDto= studentServiceImpl.getStudentById(studentId);
+       return studentDto.map(ResponseEntity::ok).orElseThrow(() -> new ResourceNotFoundException("Student not found"));
    }
    @PostMapping("/create")
-    public StudentEntity createStudent(@RequestBody StudentEntity studentEntity){
-       return studentService.createStudent(studentEntity);
+    public ResponseEntity<StudentDto> createStudent(@RequestBody StudentDto studentDto){
+       StudentDto savedStudentDto = studentServiceImpl.createStudent(studentDto);
+       return new ResponseEntity<>(savedStudentDto, HttpStatus.CREATED);
    }
     @PutMapping(path = "/{studentId}/admission/{admissionId}")
-    private StudentEntity assignAdmissionToStudent(@PathVariable Long studentId, @PathVariable("admissionId") Long admissionId) {
-        return studentService.assignAdmissionToStudent(studentId,admissionId);
+    private ResponseEntity<StudentDto> assignAdmissionToStudent(@PathVariable Long studentId, @PathVariable("admissionId") Long admissionId) {
+        StudentDto updatedStudentDto= studentServiceImpl.assignAdmissionToStudent(studentId,admissionId);
+        return new ResponseEntity<>(updatedStudentDto,HttpStatus.OK);
     }
 
     @PutMapping("/{studentId}/subject/{subjectId}")
-    private StudentEntity assignSubjectToStudent(@PathVariable Long studentId, @PathVariable Long subjectId) {
-       return studentService.assignSubjectToStudent(studentId,subjectId);
+    private ResponseEntity<StudentDto> assignSubjectToStudent(@PathVariable Long studentId, @PathVariable Long subjectId) {
+       StudentDto updatedStudentDto= studentServiceImpl.assignSubjectToStudent(studentId,subjectId);
+       return new ResponseEntity<>(updatedStudentDto,HttpStatus.OK);
     }
 
     @PutMapping("/{studentId}/professor/{professorId}")
-    private StudentEntity assignProfessorToStudent(@PathVariable Long studentId, @PathVariable Long professorId) {
-       return studentService.assignProfessorToStudent(studentId,professorId);
+    private ResponseEntity<StudentDto> assignProfessorToStudent(@PathVariable Long studentId, @PathVariable Long professorId) {
+        StudentDto updatedStudentDto= studentServiceImpl.assignProfessorToStudent(studentId,professorId);
+        return new ResponseEntity<>(updatedStudentDto,HttpStatus.OK);
+    }
+
+    @PostMapping("/update/{id}")
+    public ResponseEntity<StudentDto> updateStudent(@RequestBody StudentDto studentDto,@PathVariable Long id){
+        StudentDto savedStudentDto = studentServiceImpl.updateStudent(studentDto,id);
+        return new ResponseEntity<>(savedStudentDto, HttpStatus.CREATED);
     }
 }

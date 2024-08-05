@@ -1,7 +1,7 @@
 package com.skysoft.krd.collegemanagementapi.controllers;
 
 import com.skysoft.krd.collegemanagementapi.entities.SubjectEntity;
-import com.skysoft.krd.collegemanagementapi.services.SubjectService;
+import com.skysoft.krd.collegemanagementapi.services.impl.SubjectService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

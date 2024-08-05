@@ -1,4 +1,4 @@
-package com.skysoft.krd.collegemanagementapi.services;
+package com.skysoft.krd.collegemanagementapi.services.impl;
 
 import com.skysoft.krd.collegemanagementapi.entities.ProfessorEntity;
 import com.skysoft.krd.collegemanagementapi.entities.SubjectEntity;
@@ -6,7 +6,6 @@ import com.skysoft.krd.collegemanagementapi.repositories.ProfessorRepository;
 import com.skysoft.krd.collegemanagementapi.repositories.SubjectRepository;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.Subject;
 import java.util.List;
 import java.util.Optional;
 

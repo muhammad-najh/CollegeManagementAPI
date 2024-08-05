@@ -1,4 +1,4 @@
-package com.skysoft.krd.collegemanagementapi.services;
+package com.skysoft.krd.collegemanagementapi.services.impl;
 
 import com.skysoft.krd.collegemanagementapi.entities.SubjectEntity;
 import com.skysoft.krd.collegemanagementapi.repositories.SubjectRepository;
